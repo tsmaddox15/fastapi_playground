@@ -1,5 +1,5 @@
 import time
-from celery_app import celery_app
+from .celery_app import celery_app
 
 @celery_app.task
 def long_task(duration: int):

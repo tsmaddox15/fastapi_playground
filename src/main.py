@@ -2,8 +2,8 @@ import os
 import concurrent
 from fastapi import FastAPI, BackgroundTasks
 from celery.result import AsyncResult
-from tasks import long_task
-from celery_app import celery_app
+from .tasks import long_task
+from .celery_app import celery_app
 from sqlalchemy import create_engine, text, inspect
 from celery.result import AsyncResult
 import time

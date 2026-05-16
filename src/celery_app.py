@@ -14,4 +14,4 @@ celery_app.conf.update(
     result_serializer='json',
     accept_content=['json'],
 )
-import tasks
+from .tasks import *
