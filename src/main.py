@@ -60,6 +60,8 @@ async def startup():
 def thread_info():
     print_thread_info()
     return ""
+
+""" CELERY TASK STUFF"""
 @app.get("/run-task/{duration}")
 def run_task(duration: int):
     """Start a background task and return its ID"""
@@ -111,18 +113,6 @@ async def blocking():
     return {"message": "blocking endpoint done"}
 
 
-@app.get("/blocking")
-async def blocking():
-    print(f"Start blocking: {datetime.now()}")
-    pid = os.getpid()
-    print(f"Process {pid}")
-    #time sleep is sync and blocks the thread
-    time.sleep(15)
-
-    print(f"End blocking: {datetime.now()}")
-    return {"message": "blocking endpoint done"}
-
-
 @app.get("/non_blocking")
 async def non_blocking():
     """"""
@@ -147,14 +137,23 @@ def sync():
     print(f"End sync: {datetime.now()}")
     return {"message": "sync response"}
 
+"""Examples for how async and sync work with fastapi's background task."""
 @app.get("/blocking_task")
-async def index(background_tasks: BackgroundTasks):
+async def block_task(background_tasks: BackgroundTasks):
     """Shows that running our blocking task in background will block the entire event loop if something tries to run after."""
     background_tasks.add_task(blocking)
 
     return {"message": "response returned immediately"}
 
 
+@app.get("/non_blocking_task")
+def non_block_task(background_tasks: BackgroundTasks):
+    """Shows that running our blocking task in background will block the entire event loop if something tries to run after."""
+    background_tasks.add_task(sync)
+
+    return {"message": "response returned immediately"}
+
+"""Simple example for how to handle b"""
 def do_work():
     try:
         raise Exception("doesn't resolve at the endpoint") # this doesn't go to except in the endpoint
